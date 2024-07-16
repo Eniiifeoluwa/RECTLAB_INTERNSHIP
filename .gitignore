@@ -1,0 +1,26 @@
+# Python
+__pycache__/
+*.py[cod]
+
+# Virtual environments
+venv/
+.venv/
+.env/
+
+# VS Code and PyCharm settings
+.idea/
+.vscode/
+
+# Windows system files and directories
+AppData/
+Application Data/
+Local Settings/
+My Documents/
+Desktop.ini
+Thumbs.db
+
+# Others
+node_modules/
+.cache/
+*.log
+model.pth
