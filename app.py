@@ -3,7 +3,6 @@ import torch
 import torch.nn as nn
 from torch.nn import functional as F
 from transformers import GPT2Tokenizer
-
 # Hyperparameters
 batch_size = 16 
 block_size = 32 
@@ -134,9 +133,30 @@ class BigramLanguageModel(nn.Module):
             idx = torch.cat((idx, idx_next), dim=1)
         return idx
 
+import streamlit as st
+import torch
+import gdown
+
+# Replace 'your_file_id' with the actual file ID from your Google Drive link
+# For example, if your link is 'https://drive.google.com/file/d/1A2B3C4D5E6F7G8H9I/view?usp=sharing'
+# then 'your_file_id' is '1A2B3C4D5E6F7G8H9I'
+
+
+
+
 # Load model
 model = BigramLanguageModel().to(device)
-model.load_state_dict(torch.load("C:/Users/HP/Downloads/model.pth", map_location=device))
+file_id = '1lEb3aitm0FTuUfysmXVAz_htAjX4_xux'
+download_url = f'https://drive.google.com/uc?id={file_id}'
+
+# Download the file
+output = 'model.pth'
+gdown.download(download_url, output, quiet=False)
+
+# Load the model
+#model = torch.load('model.pth')
+
+model.load_state_dict(torch.load("model.pth", map_location=device))
 model.eval()
 
 # Streamlit app
