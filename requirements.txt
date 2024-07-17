@@ -3,3 +3,5 @@ torch
 transformers
 tokenizers
 gdown
+gtts
+gTTS

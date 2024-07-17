@@ -3,6 +3,10 @@ import torch
 import torch.nn as nn
 from torch.nn import functional as F
 from transformers import GPT2Tokenizer
+from gtts import gTTS
+import gdown
+import os
+
 # Hyperparameters
 batch_size = 16 
 block_size = 32 
@@ -133,17 +137,6 @@ class BigramLanguageModel(nn.Module):
             idx = torch.cat((idx, idx_next), dim=1)
         return idx
 
-import streamlit as st
-import torch
-import gdown
-
-# Replace 'your_file_id' with the actual file ID from your Google Drive link
-# For example, if your link is 'https://drive.google.com/file/d/1A2B3C4D5E6F7G8H9I/view?usp=sharing'
-# then 'your_file_id' is '1A2B3C4D5E6F7G8H9I'
-
-
-
-
 # Load model
 model = BigramLanguageModel().to(device)
 file_id = '1lEb3aitm0FTuUfysmXVAz_htAjX4_xux'
@@ -154,8 +147,6 @@ output = 'model.pth'
 gdown.download(download_url, output, quiet=False)
 
 # Load the model
-#model = torch.load('model.pth')
-
 model.load_state_dict(torch.load("model.pth", map_location=device))
 model.eval()
 
@@ -163,14 +154,19 @@ model.eval()
 st.title("PROJECT 2 (TINY-SHAKESPEARE)")
 
 prompt = st.text_input("Enter your prompt:", "")
+response_type = st.radio("Choose the response type:", ('Text', 'Audio'))
 
 if st.button("Generate"):
     if prompt:
         context = tokenizer.encode(prompt, return_tensors='pt').to(device)
         generated_text_ids = model.generate(context, max_new_tokens=200)
         generated_text = tokenizer.decode(generated_text_ids[0].tolist())
-        st.write(generated_text)
+        
+        if response_type == 'Text':
+            st.write(generated_text)
+        elif response_type == 'Audio':
+            tts = gTTS(text=generated_text, lang='en')
+            tts.save("output.mp3")
+            st.audio("output.mp3", format="audio/mp3")
     else:
         st.write("Please enter a prompt.")
-
-
